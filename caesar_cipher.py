@@ -6,7 +6,19 @@ def caesar_cipher_encrypt(plaintext):
 
     return ciphertext
 
-plaintext = "HELLO"
-ciphertext = caesar_cipher_encrypt(plaintext)
+def caesar_cipher_decrypt(ciphertext):
+    plaintext = ""
 
-print(f"Plaintext: {plaintext}\nCiphertext: {ciphertext}")
+    for char in ciphertext:
+        plaintext += chr(ord(char) - 3)
+
+    return plaintext
+
+plaintext = "HELLO"
+print(f"Plaintext: {plaintext}")
+
+ciphertext = caesar_cipher_encrypt(plaintext)
+print(f"Ciphertext: {ciphertext}")
+
+plaintext = caesar_cipher_decrypt(ciphertext)
+print(f"Decrypted: {plaintext}")
