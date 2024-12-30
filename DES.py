@@ -164,3 +164,23 @@ def S_Box(data, table):
     col_index = int(data[1:5], 2)
     row_index = int(data[0] + data[5], 2)
     return bin(table[row_index][col_index])[2:].zfill(4)
+
+def F(half_data, key):
+    # Step 1: Perform expansion permutation on half_data
+    expanded_data = expansion_permutation(half_data)
+    
+    # Step 2: XOR the expanded data with the key
+    xor_result = bin(int(expanded_data, 2) ^ int(key, 2))[2:].zfill(len(expanded_data))
+    
+    # Step 3: Divide the XOR result into 8 segments of 6 bits each and pass through S-Boxes
+    sbox_result = ""
+    sboxes = [S1, S2, S3, S4, S5, S6, S7, S8]
+    for i in range(8):
+        six_bits = xor_result[i * 6:(i + 1) * 6]
+        sbox_result += S_Box(six_bits, sboxes[i])
+    
+    # Step 4: Perform straight P-box permutation on the S-box result
+    result = straight_pbox_permutation(sbox_result)
+    
+    return result
+
