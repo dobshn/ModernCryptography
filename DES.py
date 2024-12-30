@@ -226,16 +226,19 @@ def des_encrypt(data, key):
     permuted_data = initial_permutation(data)
 
     # Step 2: 데이터를 왼쪽, 오른쪽으로 나눔
-    left, right = permuted_data[:32], permuted_data[32:]
+    L0, R0 = permuted_data[:32], permuted_data[32:]
 
     # Steps 3-18: 라운드 반복 (16번)
     for i in range(16):
-        temp = right
-        right = bin(int(left, 2) ^ int(F(right, round_keys[i]), 2))[2:].zfill(32)
-        left = temp
+        # 1라운드 페이스텔 구조 적용
+        R1 = R0
+        L1 = bin(int(L0, 2) ^ int(F(R0, round_keys[i]), 2))[2:].zfill(32)
+
+        # 다음 라운드에선 엇갈려서 들어감
+        R0, L0 = L1, R1
 
     # Step 19: 나누어진 부분 결합
-    combined_data = right + left
+    combined_data = L1 + R1
 
     # Step 20: 최종 순열 적용
     encrypted_data = final_permutation(combined_data)
