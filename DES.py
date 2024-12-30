@@ -235,3 +235,19 @@ def des_encrypt(data, key):
     encrypted_data = final_permutation(combined_data)
 
     return encrypted_data
+
+
+
+hex_data = "4E6F772069732074"
+bin_data = bin(int(hex_data, 16))[2:].zfill(64)
+
+hex_key = "0123456789ABCDEF"
+bin_key = bin(int(hex_key, 16))[2:].zfill(64)
+
+hex_out = "3FA40E8A984D4815"
+bin_out = bin(int(hex_out, 16))[2:].zfill(64)
+
+print(hex_data, hex_key, hex_out)
+print(bin_data, bin_key, bin_out)
+print(len(bin_data), len(bin_key), len(bin_out))
+print(des_encrypt(bin_data, bin_key) == bin_out)
