@@ -280,8 +280,8 @@ bin_key = bin(int(hex_key, 16))[2:].zfill(64)
 hex_out = "3FA40E8A984D4815"
 bin_out = bin(int(hex_out, 16))[2:].zfill(64)
 
-print(hex_data, hex_key, hex_out)
-print(bin_data, bin_key, bin_out)
-print(len(bin_data), len(bin_key), len(bin_out))
-print(des_encrypt(bin_data, bin_key) == bin_out)
-print(des_decrypt(des_encrypt(bin_data, bin_key), bin_key) == bin_data)
+print(f"암호화 전 데이터:  {bin_data}")
+print(f"암호화 예상 데이터: {bin_out}")
+print(f"암호화 후 데이터:  {des_encrypt(bin_data, bin_key)}")
+print(f"암호화 예측 결과 일치 여부: {des_encrypt(bin_data, bin_key) == bin_out}")
+print(f"암호화 후 복호화 성공 여부: {des_decrypt(des_encrypt(bin_data, bin_key), bin_key) == bin_data}")
