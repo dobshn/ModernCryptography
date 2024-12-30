@@ -236,7 +236,21 @@ def des_encrypt(data, key):
 
     return encrypted_data
 
+def des_decrypt(data, key):
 
+    round_keys = key_generator(key)
+
+    permuted_data = initial_permutation(data)
+    L1, R1 = permuted_data[:32], permuted_data[32:]
+
+    for i in range(15, -1, -1):
+        R0 = R1
+        L0 = bin(int(L1, 2) ^ int(F(R1, round_keys[i]), 2))[2:].zfill(32)
+        L1, R1 = R0, L0
+
+    combined_data = L0 + R0
+    decrypted_data = final_permutation(combined_data)
+    return decrypted_data
 
 hex_data = "4E6F772069732074"
 bin_data = bin(int(hex_data, 16))[2:].zfill(64)
@@ -251,3 +265,4 @@ print(hex_data, hex_key, hex_out)
 print(bin_data, bin_key, bin_out)
 print(len(bin_data), len(bin_key), len(bin_out))
 print(des_encrypt(bin_data, bin_key) == bin_out)
+print(des_decrypt(des_encrypt(bin_data, bin_key), bin_key) == bin_data)
