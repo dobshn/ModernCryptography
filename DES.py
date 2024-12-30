@@ -72,7 +72,7 @@ COMPRESSION_PBOX_TABLE = [
 
 # S1
 S1 = [
-    [14, 4, 13, 1, 2, 15, 11, 8, 16, 5, 10, 3, 12, 9, 0, 7],
+    [14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7],
     [0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8],
     [4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0],
     [15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13]
@@ -209,3 +209,29 @@ def key_generator(initial_key):
         round_keys.append(round_key)
 
     return round_keys
+
+def des_encrypt(data, key):
+
+    # Generate the round keys
+    round_keys = key_generator(key)
+
+    # Step 1: Perform the Initial Permutation
+    permuted_data = initial_permutation(data)
+
+    # Step 2: Split the data into two halves (L0 and R0)
+    left, right = permuted_data[:32], permuted_data[32:]
+
+    # Steps 3-18: DES rounds (16 times)
+    for i in range(16):
+        temp = right
+        # Pass right half through F function
+        right = bin(int(left, 2) ^ int(F(right, round_keys[i]), 2))[2:].zfill(32)
+        left = temp  # Swap halves
+
+    # Step 19: Combine halves (R16 + L16)
+    combined_data = right + left
+
+    # Step 20: Apply the Final Permutation
+    encrypted_data = final_permutation(combined_data)
+
+    return encrypted_data
