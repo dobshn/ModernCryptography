@@ -16,9 +16,12 @@ def initial_permutation(data):
     :param data: 64 bit 데이터를 문자열로 입력 받음
     :return: IP_TABLE 에 의해 순열이 적용된 64 bit 문자열
     """
+    return permutation(data, IP_TABLE)
+
+def permutation(data, table):
     result = ""
 
-    for i in IP_TABLE:
+    for i in table:
         result += data[i - 1]
 
     return result
