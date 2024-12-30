@@ -184,3 +184,28 @@ def F(half_data, key):
     
     return result
 
+def key_generator(initial_key):
+    def left_shift(key, shifts):
+        return key[shifts:] + key[:shifts]
+
+    # Step 1: Apply Parity Drop P-box permutation
+    key_56 = parity_drop_permutation(initial_key)
+
+    # Step 2: Divide the key into left and right halves
+    left_half = key_56[:28]
+    right_half = key_56[28:]
+
+    # Schedule of left shifts for 16 rounds
+    shift_schedule = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
+
+    round_keys = []
+    for shifts in shift_schedule:
+        # Step 3: Perform left shifts on both halves
+        left_half = left_shift(left_half, shifts)
+        right_half = left_shift(right_half, shifts)
+
+        # Step 4: Combine halves and apply Compression P-box permutation
+        round_key = compression_permutation(left_half + right_half)
+        round_keys.append(round_key)
+
+    return round_keys
